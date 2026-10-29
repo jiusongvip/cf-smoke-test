@@ -1,0 +1,34 @@
+# push 到 main 即自动部署到 Cloudflare Pages（Direct Upload 项目）
+# 这是"纯静态、无构建"版本；Astro 等需要构建的项目，取消注释 build 相关步骤并把
+# `pages deploy .` 改成 `pages deploy dist`
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---- 纯静态项目不需要构建，保持注释 ----
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 22
+      #     cache: npm
+      # - run: npm ci && npm run build
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: >-
+            pages deploy . --project-name=cf-smoke-test-du --branch=main
