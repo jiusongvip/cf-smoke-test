@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cloudflare Pages Smoke Test</title>
+<meta name="robots" content="noindex, nofollow" />
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    font: 15px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #0b1020; color: #e8ecf6; padding: 24px;
+  }
+  .card {
+    width: min(680px, 100%); background: #131a2e; border: 1px solid #26314f;
+    border-radius: 14px; padding: 28px 28px 22px;
+  }
+  .badge {
+    display: inline-block; font-size: 12px; letter-spacing: .08em;
+    text-transform: uppercase; color: #0b1020; background: #f6821f;
+    padding: 3px 10px; border-radius: 999px; font-weight: 700;
+  }
+  h1 { font-size: 22px; margin: 14px 0 6px; }
+  p.lead { margin: 0 0 20px; color: #97a3c0; font-size: 14px; }
+  dl { display: grid; grid-template-columns: 132px 1fr; gap: 8px 14px; margin: 0; }
+  dt { color: #7d89a8; font-size: 13px; }
+  dd { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; word-break: break-all; }
+  .ok { margin-top: 20px; padding: 12px 14px; border-radius: 10px;
+        background: #0f2a1d; border: 1px solid #1f5b3c; color: #8fe3b0; font-size: 13px; }
+  footer { margin-top: 18px; color: #5f6b88; font-size: 12px; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <span class="badge">Cloudflare Pages</span>
+    <h1>Smoke Test · jiusongvip/cf-smoke-test</h1>
+    <p class="lead">纯静态页，无构建步骤。看到本页说明 GitHub App → Pages 项目 → 部署 → pages.dev 全链路可用。</p>
+
+    <dl>
+      <dt>Host</dt><dd id="host">—</dd>
+      <dt>完整地址</dt><dd id="href">—</dd>
+      <dt>访问时间</dt><dd id="now">—</dd>
+      <dt>协议 / 安全</dt><dd id="proto">—</dd>
+      <dt>浏览器</dt><dd id="ua">—</dd>
+      <dt>语言 / 时区</dt><dd id="lang">—</dd>
+      <dt>视口</dt><dd id="vp">—</dd>
+      <dt>来源页</dt><dd id="ref">—</dd>
+    </dl>
+
+    <div class="ok" id="verdict">脚本未执行 —— 如果你看到这行，说明内联 JS 被拦截或页面未完整加载。</div>
+
+    <footer>Rendered at build time by Cloudflare Pages · noindex</footer>
+  </main>
+
+<script>
+  (function () {
+    var d = new Date();
+    var set = function (id, v) { document.getElementById(id).textContent = v; };
+    set('host', location.host);
+    set('href', location.href);
+    set('now', d.toLocaleString('zh-CN', { hour12: false }) + ' (' + d.toISOString() + ')');
+    set('proto', location.protocol + ' · ' + (window.isSecureContext ? 'secure context' : '非安全上下文'));
+    set('ua', navigator.userAgent);
+    set('lang', (navigator.language || '-') + ' / ' + (Intl.DateTimeFormat().resolvedOptions().timeZone || '-'));
+    set('vp', window.innerWidth + ' × ' + window.innerHeight);
+    set('ref', document.referrer || '(直接访问)');
+    var v = document.getElementById('verdict');
+    v.textContent = '✅ 页面已执行到此：' + location.host + ' 工作正常。';
+  })();
+</script>
+</body>
+</html>
