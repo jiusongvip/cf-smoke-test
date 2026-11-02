@@ -31,4 +31,4 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: >-
-            pages deploy . --project-name=cf-smoke-test-du --branch=main
+            pages deploy . --project-name=cf-smoke-test --branch=main
